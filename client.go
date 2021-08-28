@@ -39,27 +39,10 @@ func startClient(username string, addr string) {
 	go createUI()
 	go writer(c)
 	
-	// go reader(c)
-
 	for{
 		time.Sleep(50 * time.Millisecond)
 	}
 }
-
-// func reader(c net.Conn){
-// 	defer c.Close()
-
-// 	enc := gob.NewEncoder(c)
-
-// 	for {
-// 		if messageText != "" {
-// 			message := Message{Content: messageText, Name: Client.Name, Timestamp: time.Now()}
-// 			enc.Encode(message)
-// 		}
-
-// 		time.Sleep(20 * time.Millisecond)
-// 	}
-// }
 
 func writer(c net.Conn) {
 	defer c.Close()

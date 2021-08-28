@@ -34,7 +34,7 @@ func startServer(port string) {
 
 func handleConnection(c net.Conn) {
 	defer c.Close()
-
+	
 	var netData Message
 	for {
 		dec := gob.NewDecoder(c)

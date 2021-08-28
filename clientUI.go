@@ -23,12 +23,6 @@ func createUI() {
 		}
 	}()
 
-	// setInputFocus := func(tview.Primitive) {
-	// 	app.SetFocus(inputField)
-	// }
-
-	// defer os.Exit(0);
-
 	defer fmt.Println("Returned from clientUI.go")
 
 	ctrlCHandler()
@@ -48,15 +42,13 @@ func createUI() {
 	inputDone := func(event tcell.Key) {
 		switch event {
 		case tcell.KeyEnter:
-			// textView.Write([]byte(inputField.GetText()))
-			// fmt.Fprintf(textView, "%s: %s\n", Client.Name, inputField.GetText())
 			parseInput(inputField.GetText())
-			// fmt.Fprintf(textView, "%s\n", inputField.GetText())
 		}
 	}
 
 	inputField.
 		SetLabel("> ").
+		SetLabelColor(tcell.ColorRed).
 		SetFieldWidth(0).
 		SetFieldTextColor(tcell.ColorWhite).
 		SetFieldBackgroundColor(tcell.ColorBlack).
@@ -81,18 +73,12 @@ func createUI() {
 	if err := app.SetRoot(grid, true).EnableMouse(false).Run(); err != nil {
 		panic(err)
 	}
-
-	// textView.Focus(setInputFocus)
-	// statusBar.Focus(setInputFocus)
-
 }
 
-func appendMessage(message Message){
-	// textView.Write([]byte(message.Content))
-	// fmt.Println(message)
-	fmt.Fprintf(textView, "%s: %s\n", message.Name, message.Content)
-	// fmt.Println(c)
-	// fmt.Println(message.Content)
-	// fmt.Println(message.Content)
-	// textView.SetText(message.Content)
+func appendMessage(message Message) {
+	if message.Name != Client.Name {
+		fmt.Fprintf(textView, "%s: %s\n", message.Name, message.Content)
+	} else {
+		fmt.Fprintf(textView, "[red]%s[white]\n", message.Content)
+	}
 }
