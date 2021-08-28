@@ -4,7 +4,6 @@ import (
 	"encoding/gob"
 	"fmt"
 	"net"
-	// "strconv"
 )
 
 var clients []net.Conn
@@ -35,20 +34,20 @@ func startServer(port string) {
 
 func handleConnection(c net.Conn) {
 	defer c.Close()
+
+	dec := gob.NewDecoder(c)
+	var netData Message
 	for {
-		var netData Message
-		dec := gob.NewDecoder(c)
 		err := dec.Decode(&netData)
 		if chkDisconnect(c, err) {
 			removeClient(indexOfAddr(c.RemoteAddr(), clients))
 			return
 		}
 
-		for i, cl := range clients {
-			fmt.Print("-> ", string(netData.Content) + " ")
-			fmt.Print(i)
-			fmt.Println(" > " + cl.RemoteAddr().String() + " (" + netData.Name + ")")
-			enc := gob.NewEncoder(cl)
+		fmt.Print("-> ", string(netData.Content) + " (" + netData.Name + ") ")
+
+		for _, client := range clients {
+			enc := gob.NewEncoder(client)
 			enc.Encode(netData)
 		}
 	}
@@ -58,24 +57,7 @@ func chkDisconnect(c net.Conn, err error) bool {
 	fmt.Println(clients)
 	if err != nil {
 		fmt.Println(c.RemoteAddr().String() + " disconnected.")
-		// i := indexOfAddr(c.RemoteAddr(), clients)
-		// debug(strconv.Itoa(i))
-		// if i == -1 {
-		// 	// fmt.Println("Error: cant fint address")
-		// 	return true
-		// } else {
-		// 	// removeClient(i)
-		// 	return true
-		// }
-
 		return true
-
-		// c.Close()
-		// return
 	}
 	return false
 }
-
-// func debug(str string){
-// 	fmt.Println("DEBUG: " + "\033[33m" + str + "\033[0m")
-// }
