@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"runtime/debug"
 
 	"github.com/gdamore/tcell/v2"
@@ -23,9 +24,7 @@ func createUI() {
 		}
 	}()
 
-	defer fmt.Println("Returned from clientUI.go")
-
-	ctrlCHandler()
+	defer os.Exit(0)
 
 	app = tview.NewApplication()
 
@@ -77,7 +76,7 @@ func createUI() {
 
 func appendMessage(message Message) {
 	if message.Name != Client.Name {
-		fmt.Fprintf(textView, "%s: %s\n", message.Name, message.Content)
+		fmt.Fprintf(textView, "%s > %s\n", message.Name, message.Content)
 	} else {
 		fmt.Fprintf(textView, "[red]%s[white]\n", message.Content)
 	}

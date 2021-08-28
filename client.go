@@ -17,9 +17,6 @@ var Client struct {
 var c net.Conn
 
 func startClient(username string, addr string) {
-
-	defer fmt.Println("Returned from startClient")
-	
 	if username == "" {
 		fmt.Print("Please enter username: ")
 		reader := bufio.NewReader(os.Stdin)
@@ -33,7 +30,7 @@ func startClient(username string, addr string) {
 	var err error
 	c, err = net.Dial("tcp", conn)
 	chk(err)
-	ctrlCHandlerClient(c)
+	// ctrlCHandlerClient(c)
 		
 	
 	go createUI()
@@ -50,9 +47,9 @@ func writer(c net.Conn) {
 	
 	for {
 		var message Message
-		// fmt.Println("POLYCHIH SAOBSHTENIE")
+
 		if err := dec.Decode(&message); err != nil {
-			// fmt.Println("ERR " + err.Error())
+
 		} else {
 			appendMessage(message)
 		}
@@ -61,10 +58,21 @@ func writer(c net.Conn) {
 }
 
 func parseInput(input string){
+	statusBar.Clear()
+	if string([]byte(input)[0]) == ":" {
+		if len(input) > 1 {
+			parseCommand(input[1:])
+		}
+		inputField.SetText("")
+	} else {
+		sendMessage(input)
+		inputField.SetText("")
+	}
+}
+
+func sendMessage(input string) {
 	enc := gob.NewEncoder(c)
 
 	message := Message{Content: input, Name: Client.Name, Timestamp: time.Now()}
 	enc.Encode(message)
-
-	inputField.SetText("")
 }
