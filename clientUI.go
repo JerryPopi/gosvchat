@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"runtime/debug"
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
@@ -16,11 +17,11 @@ var (
 )
 
 func createUI() {
-	// defer func() {
-	// 	if r := recover(); r != nil {
-	// 		fmt.Println("stacktrace from panic: \n" + string(debug.Stack()))
-	// 	}
-	// }()
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("stacktrace from panic: \n" + string(debug.Stack()))
+		}
+	}()
 
 	// setInputFocus := func(tview.Primitive) {
 	// 	app.SetFocus(inputField)
@@ -29,6 +30,8 @@ func createUI() {
 	// defer os.Exit(0);
 
 	defer fmt.Println("Returned from clientUI.go")
+
+	ctrlCHandler()
 
 	app = tview.NewApplication()
 

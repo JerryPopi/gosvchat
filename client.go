@@ -17,24 +17,28 @@ var Client struct {
 var c net.Conn
 
 func startClient(username string, addr string) {
+
+	defer fmt.Println("Returned from startClient")
+	
 	if username == "" {
 		fmt.Print("Please enter username: ")
 		reader := bufio.NewReader(os.Stdin)
 		username, _ := reader.ReadString('\n')
 		Client.Name = strings.TrimSuffix(username, "\n")
-	} else {
-		Client.Name = username
-	}
-
+		} else {
+			Client.Name = username
+		}
+		
 	conn := addr
 	var err error
 	c, err = net.Dial("tcp", conn)
 	chk(err)
 	ctrlCHandlerClient(c)
-
+		
+	
 	go createUI()
-
 	go writer(c)
+	
 	// go reader(c)
 
 	for{
@@ -60,7 +64,7 @@ func startClient(username string, addr string) {
 func writer(c net.Conn) {
 	defer c.Close()
 	dec := gob.NewDecoder(c)
-
+	
 	for {
 		var message Message
 		// fmt.Println("POLYCHIH SAOBSHTENIE")

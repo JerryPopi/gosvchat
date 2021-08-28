@@ -35,9 +35,9 @@ func startServer(port string) {
 func handleConnection(c net.Conn) {
 	defer c.Close()
 
-	dec := gob.NewDecoder(c)
 	var netData Message
 	for {
+		dec := gob.NewDecoder(c)
 		err := dec.Decode(&netData)
 		if chkDisconnect(c, err) {
 			removeClient(indexOfAddr(c.RemoteAddr(), clients))
@@ -54,6 +54,7 @@ func handleConnection(c net.Conn) {
 }
 
 func chkDisconnect(c net.Conn, err error) bool {
+	fmt.Print("chkdisconnect: ")
 	fmt.Println(clients)
 	if err != nil {
 		fmt.Println(c.RemoteAddr().String() + " disconnected.")
