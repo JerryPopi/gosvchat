@@ -7,6 +7,7 @@ import(
 )
 
 func main(){
+	loadConfig()
 	var server = flag.Bool("s", false, "Selects if program will run in server mode")
 	var port = flag.String("p", "3000", "Sets server port")
 	var host = flag.String("h", "localhost:3000", "<host:port>")

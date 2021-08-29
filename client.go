@@ -18,19 +18,21 @@ var c net.Conn
 
 func startClient(username string, addr string) {
 	if username == "" {
-		fmt.Print("Please enter username: ")
-		reader := bufio.NewReader(os.Stdin)
-		username, _ := reader.ReadString('\n')
-		Client.Name = strings.TrimSuffix(username, "\n")
-		} else {
-			Client.Name = username
+		// loadConfig()
+
+		if Client.Name == "" {
+			fmt.Print("Please enter username: ")
+			reader := bufio.NewReader(os.Stdin)
+			username, _ := reader.ReadString('\n')
+			Client.Name = strings.TrimSuffix(username, "\n")
 		}
+	}
+
 		
 	conn := addr
 	var err error
 	c, err = net.Dial("tcp", conn)
 	chk(err)
-	// ctrlCHandlerClient(c)
 		
 	
 	go createUI()

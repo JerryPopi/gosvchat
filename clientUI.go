@@ -17,6 +17,9 @@ var (
 	statusBar  *tview.TextView
 )
 
+//todo configs
+// ? input history (nep)
+
 func createUI() {
 	defer func() {
 		if r := recover(); r != nil {
