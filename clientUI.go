@@ -17,10 +17,11 @@ var (
 	statusBar  *tview.TextView
 )
 
-//todo configs
+// todo configs
 // ? input history (nep)
 
 func createUI() {
+	fmt.Println(Config.Client)
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Println("stacktrace from panic: \n" + string(debug.Stack()))
@@ -78,9 +79,25 @@ func createUI() {
 }
 
 func appendMessage(message Message) {
-	if message.Name != Client.Name {
-		fmt.Fprintf(textView, "%s > %s\n", message.Name, message.Content)
+	fmt.Fprintf(textView, "%+v\n", message)
+	if message.Name != Config.Client.Name {
+		if !Config.Env.OverrideCustomColors {
+			//					  rcc usr ptr msg
+			color := "[" + message.CustomColor + "]"
+			// fmt.Fprintf(textView, "%s%s %s[white]\n", color, message.Name, message.Content)
+			fmt.Fprint(textView, color, message.Name, " ", message.Content, "[white]\n")
+		} else {
+			color := "[" + Config.Env.RemoteColor + "]"
+			// fmt.Fprintf(textView, "%s%s %s[white]\n", color, message.Name, message.Content)
+			fmt.Fprint(textView, color, message.Name, " ", message.Content, "[white]\n")
+		}
+
 	} else {
-		fmt.Fprintf(textView, "[red]%s[white]\n", message.Content)
+		color := "[" + Config.Env.LocalColor + "]"
+		// 					   lc   msg
+		// fmt.Fprintf(textView, "[%s] %s[white]\n", Config.Env.LocalColor, message.Content)
+		fmt.Fprint(textView, color, message.Content, "[white]\n")
+
+
 	}
 }

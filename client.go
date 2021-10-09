@@ -10,35 +10,31 @@ import (
 	"time"
 )
 
-var Client struct {
-	Name string
-}
+// var Client struct {
+// 	Name string
+// }
 
 var c net.Conn
 
 func startClient(username string, addr string) {
 	if username == "" {
-		// loadConfig()
-
-		if Client.Name == "" {
+		if Config.Client.Name == "" {
 			fmt.Print("Please enter username: ")
 			reader := bufio.NewReader(os.Stdin)
 			username, _ := reader.ReadString('\n')
-			Client.Name = strings.TrimSuffix(username, "\n")
+			Config.Client.Name = strings.TrimSuffix(username, "\n")
 		}
 	}
 
-		
 	conn := addr
 	var err error
 	c, err = net.Dial("tcp", conn)
 	chk(err)
-		
-	
+
 	go createUI()
 	go writer(c)
-	
-	for{
+
+	for {
 		time.Sleep(50 * time.Millisecond)
 	}
 }
@@ -46,7 +42,7 @@ func startClient(username string, addr string) {
 func writer(c net.Conn) {
 	defer c.Close()
 	dec := gob.NewDecoder(c)
-	
+
 	for {
 		var message Message
 
@@ -59,7 +55,7 @@ func writer(c net.Conn) {
 	}
 }
 
-func parseInput(input string){
+func parseInput(input string) {
 	statusBar.Clear()
 	if string([]byte(input)[0]) == ":" {
 		if len(input) > 1 {
@@ -75,6 +71,6 @@ func parseInput(input string){
 func sendMessage(input string) {
 	enc := gob.NewEncoder(c)
 
-	message := Message{Content: input, Name: Client.Name, Timestamp: time.Now()}
+	message := Message{Content: input, Name: Config.Client.Name, CustomColor: Config.Client.CustomColor, Timestamp: time.Now()}
 	enc.Encode(message)
 }
